@@ -9,7 +9,7 @@ function App() {
     const [isEditProfilePopupOpen, setProfileOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setPlaceOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setAvatarOpen] = React.useState(false);
-    const [selectedCard, setSelectedCard] = React.useState();
+    const [selectedCard, setSelectedCard] = React.useState(null);
 
     function handleEditAvatarClick() {
         setAvatarOpen(true);
@@ -39,49 +39,44 @@ function App() {
   return (
 
     <div className="page__content">
-    <Header />
-    <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={setSelectedCard} />
-    <Footer />
+        <Header />
+        <Main onEditProfile={handleEditProfileClick} onAddPlace={handleAddPlaceClick} onEditAvatar={handleEditAvatarClick} onCardClick={setSelectedCard} />
+        <Footer />
 
-    {/*Редактировать профиль  */}
-    <PopupWithForm name="edit-profile" title="Редактировать профиль" children={[
-        <fieldset className="popup__form-set">
-            <input type="text" name="title" id="name-input" required defaultValue="" className="popup__input popup__input_type_name" minLength="2" maxLength="40" placeholder="Имя" />
-            <span className="name-input-error"></span>
-            <input type="text" name="about" id="description-input" required defaultValue="" className="popup__input popup__input_type_description" minLength="2" maxLength="200" placeholder="О себе" />
-            <span className="description-input-error"></span>
-            <button type="submit" className="popup__save">Сохранить</button>
-        </fieldset>
-    ]} isOpen={isEditProfilePopupOpen} onClose={closePopupButton} />
+        {/*Редактировать профиль  */}
+        <PopupWithForm name="edit-profile" title="Редактировать профиль" isOpen={isEditProfilePopupOpen} onClose={closePopupButton} buttonText='Сохранить'>
+            <>
+                <input type="text" name="title" id="name-input" required defaultValue="" className="popup__input popup__input_type_name" minLength="2" maxLength="40" placeholder="Имя" />
+                <span className="name-input-error"></span>
+                <input type="text" name="about" id="description-input" required defaultValue="" className="popup__input popup__input_type_description" minLength="2" maxLength="200" placeholder="О себе" />
+                <span className="description-input-error"></span>
+            </>
+        </PopupWithForm>
 
-    {/* <!-- Новое место --> */}
-    <PopupWithForm name="form-add" title="Новое место" children={[
-        <fieldset className="popup__form-set">
-            <input type="text" name="title" id="title-input" required defaultValue="" placeholder="Название" className="popup__input popup__input_type_title" minLength="2" maxLength="30" />
-            <span className="title-input-error"></span>
-            <input type="url" name="about" id="link-input" required defaultValue="" placeholder="Ссылка на картинку" className="popup__input popup__input_type_link" />
-            <span className="link-input-error"></span>
-            <button type="submit" className="popup__save">Создать</button>
-        </fieldset> 
-    ]} isOpen={isAddPlacePopupOpen} onClose={closePopupButton}/>
+        {/* <!-- Новое место --> */}
+        <PopupWithForm name="form-add" title="Новое место" isOpen={isAddPlacePopupOpen} onClose={closePopupButton} buttonText='Создать'>
+            <>
+                <input type="text" name="title" id="title-input" required defaultValue="" placeholder="Название" className="popup__input popup__input_type_title" minLength="2" maxLength="30" />
+                <span className="title-input-error"></span>
+                <input type="url" name="about" id="link-input" required defaultValue="" placeholder="Ссылка на картинку" className="popup__input popup__input_type_link" />
+                <span className="link-input-error"></span>
+            </>
+        </PopupWithForm>
 
-    {/* <!-- попап удаления карточки --> */}
-    <PopupWithForm name="delete" title="Вы уверены?" children={[
-        <button className="popup__save popup__save_type_delete">Да</button>
-    ]} isOpen={false} onClose={closePopupButton} />
+        {/* <!-- попап удаления карточки --> */}
+        <PopupWithForm name="delete" title="Вы уверены?" isOpen={false} onClose={closePopupButton} buttonText='Да' />
 
-    {/* <!-- попап обновить аву --> */}
-    <PopupWithForm name="patch" title="Обновить аватар" children={[
-        <fieldset className="popup__form-set">
-            <input type="url" name="about" id="url-input" required defaultValue="" placeholder="Ссылка на картинку" className="popup__input popup__input_type_url" />
-            <span className="url-input-error"></span>
-            <button className="popup__save">Сохранить</button>
-        </fieldset>
-    ]} isOpen={isEditAvatarPopupOpen} onClose={closePopupButton} />
+        {/* <!-- попап обновить аву --> */}
+        <PopupWithForm name="patch" title="Обновить аватар" isOpen={isEditAvatarPopupOpen} onClose={closePopupButton} buttonText='Сохранить'>
+            <>
+                <input type="url" name="about" id="url-input" required defaultValue="" placeholder="Ссылка на картинку" className="popup__input popup__input_type_url" />
+                <span className="url-input-error"></span>
+            </>
+        </PopupWithForm>
 
-    {/* <!-- картинка на весь экран --> */}
-    <ImagePopup card={selectedCard} onClose={closePopupButton} />
-</div>
+        {/* <!-- картинка на весь экран --> */}
+        <ImagePopup card={selectedCard} onClose={closePopupButton} />
+    </div>
   );
 }
 

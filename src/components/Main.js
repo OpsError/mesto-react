@@ -7,9 +7,9 @@ import Card from './Card';
 
 function Main (props) {
 
-    const [userName, setUserName] = React.useState();
-    const [userDescription, setUserDescription] = React.useState();
-    const [userAvatar, setUserAvatar] = React.useState();
+    const [userName, setUserName] = React.useState('');
+    const [userDescription, setUserDescription] = React.useState('');
+    const [userAvatar, setUserAvatar] = React.useState('');
     const [cards, setCards] = React.useState([]);
 
     React.useEffect(() => {
@@ -22,12 +22,11 @@ function Main (props) {
             setUserDescription(userData.about);
             setUserAvatar(userData.avatar);
             setCards(cardsData);
+        })
+        .catch((res) => {
+            console.log(res);
         });
     });
-
-    const cardsElement = cards.map((element) => 
-        <Card card={element} onCardClick={props.onCardClick} />
-    );
 
     return(
         <main className="main">
@@ -56,7 +55,9 @@ function Main (props) {
         </section>
             
         <section className="elements">
-                {cardsElement}
+        {cards.map((element) => 
+            <Card card={element} onCardClick={props.onCardClick} key={element._id} />
+        )}
         </section>
     </main>
     );
