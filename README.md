@@ -19,5 +19,6 @@
 * Flexbox 
 * Адаптивная вёрстка
 * REST API
+* React.js
 
 **Github Pages**
