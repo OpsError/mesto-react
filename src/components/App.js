@@ -31,6 +31,17 @@ function App() {
         });
     });
 
+    // получение данных пользователя с сервера
+    React.useEffect(() => {
+        api.getInfo()
+        .then((res) => {
+            setCurrentUser(res);
+        })
+        .catch((res) => {
+            console.log(res);
+        })
+    });
+
     // поставить/убрать лайк
     function handleCardLike(card) {
         const isLiked = card.likes.some(i => i._id === currentUser._id);
@@ -47,17 +58,6 @@ function App() {
             setCards(cards.filter(item => item._id !== card._id));
         })
     }
-
-    // получение данных пользователя с сервера
-    React.useEffect(() => {
-        api.getInfo()
-        .then((res) => {
-            setCurrentUser(res);
-        })
-        .catch((res) => {
-            console.log(res);
-        })
-    });
 
     // открытие попапов
     function handleEditAvatarClick() {
