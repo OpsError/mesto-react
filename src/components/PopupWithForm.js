@@ -11,7 +11,7 @@ function PopupWithForm(props) {
 
                     <h2 className="popup__heading">{props.title}</h2>
 
-                    <form name="form" action="./pages/index.js" method="get" className={`popup__form popup__form_${props.name}`} noValidate>
+                    <form name="form" action="./pages/index.js" method="get" className={`popup__form popup__form_${props.name}`} noValidate onSubmit={props.onSubmitForm}>
                         <fieldset className="popup__form-set">
                             {props.children}
                             <button className="popup__save">{props.buttonText}</button>

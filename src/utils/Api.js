@@ -31,7 +31,7 @@ class Api {
             headers: this._headers,
             body: JSON.stringify({
                 name: data.name,
-                about: data.link
+                about: data.about
             })
         })
             .then (this._handleResponse);
@@ -47,6 +47,24 @@ class Api {
             })
         })
             .then (this._handleResponse);
+    }
+
+    changeLikeCardStatus(data, isLiked) {
+        if (isLiked) {
+            return fetch(`${this._url}/cards/${data}/likes`, {
+                method: 'DELETE',
+                headers: this._headers,
+                body: JSON.stringify({data})
+            })
+                .then (this._handleResponse);
+        } else {
+            return fetch(`${this._url}/cards/${data}/likes`, {
+                method: 'PUT',
+                headers: this._headers,
+                body: JSON.stringify({data})
+            })
+                .then (this._handleResponse);
+        }
     }
 
     deleteCard(data) {
