@@ -29,7 +29,7 @@ function App() {
         .catch((res) => {
             console.log(res);
         });
-    });
+    }, []);
 
     // получение данных пользователя с сервера
     React.useEffect(() => {
@@ -40,7 +40,7 @@ function App() {
         .catch((res) => {
             console.log(res);
         })
-    });
+    }, []);
 
     // поставить/убрать лайк
     function handleCardLike(card) {
@@ -93,7 +93,7 @@ function App() {
         api.patchInfo(data)
         .then((res) => {
             console.log(res);
-            setCurrentUser({name: res.name, about: res.about});
+            setCurrentUser(res);
             closeAllPopups();
         })
         .catch((res) => {
@@ -106,7 +106,7 @@ function App() {
         console.log(link);
         api.patchAvatar(link)
         .then((res) => {
-            setCurrentUser({avatar: res.avatar});
+            setCurrentUser(res);
             closeAllPopups();
         })
         .catch((res) => {
