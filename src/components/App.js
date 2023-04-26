@@ -12,13 +12,14 @@ import AddPlacePopup from './AddPlacePopup';
 
 
 function App() {
-    const [isEditProfilePopupOpen, setProfileOpen] = React.useState(false);
+    const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
     const [isAddPlacePopupOpen, setPlaceOpen] = React.useState(false);
     const [isEditAvatarPopupOpen, setAvatarOpen] = React.useState(false);
     const [isDeletePopupOpen, setDeleteOpen] = React.useState(false);
     const [selectedCard, setSelectedCard] = React.useState(null);
     const [currentUser, setCurrentUser] = React.useState({});
     const [cards, setCards] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(false);
 
     // получение карточек с сервера
     React.useEffect(() => {
@@ -48,6 +49,9 @@ function App() {
 
         api.changeLikeCardStatus(card._id, isLiked).then((newCard) => {
             setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        })
+        .catch((res) => {
+            console.log(res);
         });
     }
 
@@ -57,6 +61,9 @@ function App() {
         .then(() => {
             setCards(cards.filter(item => item._id !== card._id));
         })
+        .catch((res) => {
+            console.log(res);
+        });
     }
 
     // открытие попапов
@@ -65,7 +72,7 @@ function App() {
     }
 
     function handleEditProfileClick() {
-        setProfileOpen(true);
+        setIsEditProfilePopupOpen(true);
     }
 
     function handleAddPlaceClick() {
@@ -75,10 +82,10 @@ function App() {
     // закрытие попапов
     function closeAllPopups() {
         setAvatarOpen(false);
-        setProfileOpen(false);
+        setIsEditProfilePopupOpen(false);
         setPlaceOpen(false);
         setDeleteOpen(false);
-        setSelectedCard();
+        setSelectedCard(null);
     }
 
     function closePopupButton(evt) {
@@ -87,9 +94,26 @@ function App() {
         }
     }
 
+    // закрытие попапа на esc
+    const isOpen = isEditAvatarPopupOpen || isEditProfilePopupOpen || isAddPlacePopupOpen || selectedCard;
+
+    React.useEffect(() => {
+        function closeByEscape(evt) {
+            if (evt.key === 'Escape') {
+                closeAllPopups();
+            }
+        }
+        if (isOpen) {
+            document.addEventListener('keydown', closeByEscape);
+            return () => {
+                document.removeEventListener('keydown', closeByEscape);
+            }
+        }
+    }, [isOpen]);
+
     // обновление данных профиля
     function handleUpdateUser(data) {
-        console.log(data);
+        setIsLoading(true);
         api.patchInfo(data)
         .then((res) => {
             console.log(res);
@@ -98,12 +122,15 @@ function App() {
         })
         .catch((res) => {
             console.log(res);
+        })
+        .finally(() => {
+            setIsLoading(false);
         });
     }
 
     // обновление аватара
     function handleUpdateAvatar(link) {
-        console.log(link);
+        setIsLoading(true);
         api.patchAvatar(link)
         .then((res) => {
             setCurrentUser(res);
@@ -111,11 +138,15 @@ function App() {
         })
         .catch((res) => {
             console.log(res);
+        })
+        .finally(() => {
+            setIsLoading(false);
         });
     }
 
     // добавление карточки
     function handleAddPlaceSubmit(data) {
+        setIsLoading(true);
         api.postCard(data)
         .then((newCard) => {
             setCards([newCard, ...cards]);
@@ -124,6 +155,9 @@ function App() {
         .catch((res) => {
             console.log(res);
         })
+        .finally(() => {
+            setIsLoading(false);
+        });
     }
 
   return (
@@ -134,16 +168,16 @@ function App() {
             <Footer />
 
             {/*Редактировать профиль  */}
-            <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closePopupButton} onUpdateUser={handleUpdateUser} />
+            <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closePopupButton} onUpdateUser={handleUpdateUser} isLoading={isLoading} />
 
             {/* <!-- Новое место --> */}
-            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closePopupButton} onAddPlace={handleAddPlaceSubmit} />
+            <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closePopupButton} onAddPlace={handleAddPlaceSubmit} isLoading={isLoading} />
 
             {/* <!-- попап удаления карточки --> */}
             <PopupWithForm name="delete" title="Вы уверены?" isOpen={isDeletePopupOpen} onClose={closePopupButton} buttonText='Да' />
 
             {/* <!-- попап обновить аву --> */}
-            <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closePopupButton} onUpdateAvatar={handleUpdateAvatar} />
+            <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closePopupButton} onUpdateAvatar={handleUpdateAvatar} isLoading={isLoading} />
 
             {/* <!-- картинка на весь экран --> */}
             <ImagePopup card={selectedCard} onClose={closePopupButton} />

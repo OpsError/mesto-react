@@ -11,6 +11,7 @@ function AddPlacePopup(props) {
 
     function handleChangeLink(e) {
         setLink(e.target.value);
+        console.log(e.target.value)
     }
 
     function handleSubmit(e) {
@@ -18,14 +19,17 @@ function AddPlacePopup(props) {
         props.onAddPlace({name, link});
     }
 
+    React.useEffect(() => {
+        setName('');
+        setLink('');
+    }, [props.isOpen]);
+
     return(
-        <PopupWithForm name="form-add" title="Новое место" isOpen={props.isOpen} onClose={props.onClose} onSubmitForm={handleSubmit} buttonText='Создать'>
-            <>
-                <input type="text" name="name" id="title-input" required defaultValue="" onChange={handleChangeName} placeholder="Название" className="popup__input popup__input_type_title" minLength="2" maxLength="30" />
-                <span className="title-input-error"></span>
-                <input type="url" name="link" id="link-input" required defaultValue="" onChange={handleChangeLink} placeholder="Ссылка на картинку" className="popup__input popup__input_type_link" />
-                <span className="link-input-error"></span>
-            </>
+        <PopupWithForm name="form-add" title="Новое место" isOpen={props.isOpen} onClose={props.onClose} onSubmitForm={handleSubmit} buttonText={props.isLoading? 'Сохранение...' : 'Создать'}>
+            <input type="text" name="name-place" id="title-input" required value={name} onChange={handleChangeName} placeholder="Название" className="popup__input popup__input_type_title" minLength="2" maxLength="30" />
+            <span className="title-input-error"></span>
+            <input type="url" name="link-place" id="link-input" required value={link} onChange={handleChangeLink} placeholder="Ссылка на картинку" className="popup__input popup__input_type_link" />
+            <span className="link-input-error"></span>
         </PopupWithForm>
     );
 }
